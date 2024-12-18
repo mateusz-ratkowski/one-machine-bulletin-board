@@ -17,7 +17,7 @@ This repository contains my project from studies
 
 ## Project Description
 
-The aim of this project is to demonstrate basic functionalities of a social networking service, such as creating and displaying posts (tweets), all implemented on a single machine.
+The aim of this project is to demonstrate basic functionalities of a social networking service, such as creating and displaying posts, all implemented on a single machine.
 
 ## Requirements
 
