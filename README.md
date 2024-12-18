@@ -1,4 +1,4 @@
-# one-machine-twitter
+# one-machine-bulletin board
 This repository contains my project from studies 
 
 # One Machine Bulletin Board
