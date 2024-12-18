@@ -22,21 +22,21 @@ struct post *shared_data;
 int server_capacity;
 
 void connect_memory(char file_name[]) {
-    // Utworzenie klucza dla pamięci współdzielonej
+    // creating key for shared memory
     IPC_key_mem = ftok(file_name, 1);
     if (IPC_key_mem == -1) {
         printf("Błąd ftok\n");
         exit(1);
     }
 
-    // Uzyskanie identyfikatora pamięci współdzielonej
+    // geting id of shared memory
     shmid = shmget(IPC_key_mem, 0, 0600);
     if (shmid == -1) {
         printf("Błąd shmget\n");
         exit(1);
     }
 
-    // Podłączenie pamięci współdzielonej
+    // connecting shared memory
     shared_data = shmat(shmid, NULL, 0);
     if (shared_data == (void *)-1) {
         printf("Błąd shmat\n");
@@ -45,14 +45,14 @@ void connect_memory(char file_name[]) {
 }
 
 void connect_semaphores(char file_name[]) {
-    // Utworzenie klucza dla semaforów
+    // creating key for semaphores
     IPC_key_sem = ftok(file_name, 2);
     if (IPC_key_sem == -1) {
         printf("Błąd ftok\n");
         exit(1);
     }
 
-    // Uzyskanie identyfikatora semaforów
+    // getting id of semaphores
     semid = semget(IPC_key_sem, 0, 0600);
     if (semid == -1) {
         printf("Błąd semget\n");
@@ -61,7 +61,7 @@ void connect_semaphores(char file_name[]) {
 }
 
 int check_slots() {
-    // Sprawdzanie dostępnych slotów za pomocą semaforów
+    // searching for free slot by semaphores
     for (int i = 0; i < server_capacity; i++) {
         int semval = semctl(semid, i, GETVAL);
         if (semval == -1) {
@@ -78,7 +78,7 @@ int check_slots() {
 }
 
 void occupy_slot(int slot) {
-    //zajęcie slotu przez operację semaforową
+    // capture of free slot
     struct sembuf sb = {slot, -1, 0};
     if (semop(semid, &sb, 1) == -1) {
         printf("Błąd semop\n");
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
     char file_name[64], user_name[64];
     strcpy(file_name, argv[1]);
 
-    // Komunikacja przez FIFO: zapytanie o pojemność serwera
+    // FIFO comunication - request for server_capacity
     const char *request_fifo = "/tmp/request_fifo";
     const char *response_fifo = "/tmp/response_fifo";
 
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
     }
     close(response_fd);
 
-    // Połączenie z pamięcią współdzieloną i semaforami
+    // action of connecting semaphores and memory
     connect_memory(file_name);
     connect_semaphores(file_name);
 
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
         int like_index = server_capacity + 1;
         int there_no_posts = 1;
 
-        // Tryb tylko do odczytu
+        // P variant
         printf("\n____________Twitter 2.0____________\n");
         for (int i = 0; i < server_capacity; i++) {
             if(shared_data[i].clen > 0) {
@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
             exit(0);
         }
 
-        //menu wyboru postów do zalikeowania
+        //menu of posts to like
         while (1) {
             printf("Który wpis chcesz polubic? (wybierz)\n");
             if (scanf("%d", &like_index) != 1 || like_index >= server_capacity || shared_data[like_index - 1].clen == 0) {
@@ -170,7 +170,7 @@ int main(int argc, char *argv[]) {
     } else if (argc == 4 && strcmp(argv[2], "N") == 0) {
 
         /*
-            tryb tworzenia nowego posta
+            N variant
         */
 
         strcpy(user_name, argv[3]);
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
         printf("Podaj treść posta: ");
         fgets(content, sizeof(content), stdin);
 
-        //usunięcie znaku nowej linii
+        //remove new line symbol
         content[strcspn(content, "\n")] = '\0';
 
         strcpy(shared_data[free_slot].name, user_name);
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
         printf("forma argumentow nie jest poprawna\n");
     }
 
-    //odłączenie pamięci
+    //memory detach
     if (shmdt(shared_data) == -1) {
         printf("Błąd shmdt\n");
         exit(1);
