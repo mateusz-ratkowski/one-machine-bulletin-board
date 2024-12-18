@@ -33,7 +33,7 @@ The aim of this project is to demonstrate basic functionalities of a social netw
    ```
 2. Navigate to the project directory:
    ```bash
-   cd one-machine-Bulletin Board
+   cd one-machine-bulletin-board
    ```
 3. Compile the source files:
    ```bash
