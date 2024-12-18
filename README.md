@@ -21,7 +21,7 @@ The aim of this project is to demonstrate basic functionalities of a social netw
 
 ## Requirements
 
-- POSIX-compatible operating system (e.g., Linux, macOS)
+- System V-compatible operating system (e.g., Linux, macOS)
 - GCC compiler
 - Standard C libraries
 
