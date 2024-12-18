@@ -29,7 +29,7 @@ The aim of this project is to demonstrate basic functionalities of a social netw
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/mateusz-ratkowski/one-machine-twitter.git
+   git clone https://github.com/mateusz-ratkowski/one-machine-bulletin-board.git
    ```
 2. Navigate to the project directory:
    ```bash
