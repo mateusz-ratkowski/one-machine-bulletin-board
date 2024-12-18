@@ -71,7 +71,3 @@ The aim of this project is to demonstrate basic functionalities of a social netw
 
 Project created by [Mateusz Ratkowski](https://github.com/mateusz-ratkowski).
 
----
-
-**Note**: This project is a work in progress and may not include all the features typically found in social networking platforms.
-
